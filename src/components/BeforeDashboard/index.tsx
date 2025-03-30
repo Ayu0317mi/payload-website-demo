@@ -1,5 +1,6 @@
+'use client';
 import { Banner } from '@payloadcms/ui/elements/Banner'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { SeedButton } from './SeedButton'
 import './index.scss'
@@ -7,10 +8,28 @@ import './index.scss'
 const baseClass = 'before-dashboard'
 
 const BeforeDashboard: React.FC = () => {
+  const [userName, setUserName] = useState<string>('User');
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('/api/users/me');
+        if (response.ok) {
+          const userData = await response.json();
+          setUserName(userData.user?.name || userData.user?.email || 'User');
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  
   return (
     <div className={baseClass}>
       <Banner className={`${baseClass}__banner`} type="success">
-        <h4>Welcome to your dashboard!</h4>
+        <h4>Welcome to your dashboard, {userName}!</h4>
       </Banner>
       Here&apos;s what to do next:
       <ul className={`${baseClass}__instructions`}>
@@ -66,7 +85,9 @@ const BeforeDashboard: React.FC = () => {
       >
         custom component
       </a>
-      , you can remove it at any time by updating your <strong>payload.config</strong>.
+      , you can modify it to suit your needs. It will be removed when you deploy your project for the first
+      time. If you want to keep it, you can move it to a different file and remove the import from
+      <code>payload.config.ts</code>.
     </div>
   )
 }
