@@ -378,7 +378,7 @@ export interface Category {
 export interface User {
   id: string;
   name?: string | null;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'author';
   updatedAt: string;
   createdAt: string;
   email: string;

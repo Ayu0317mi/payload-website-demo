@@ -8,7 +8,7 @@ export const isAdminOrSelf: Access = ({ req }) => {
       return true;
     }
 
-    // If any other type of user, only provide access to themselves
+    // For any other type of user (author or regular user), only provide access to themselves
     return {
       id: {
         equals: req.user.id,
