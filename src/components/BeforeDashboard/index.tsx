@@ -9,17 +9,50 @@ const baseClass = 'before-dashboard'
 
 const BeforeDashboard: React.FC = () => {
   const [userName, setUserName] = useState<string>('User');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('/api/users/me');
-        if (response.ok) {
-          const userData = await response.json();
-          setUserName(userData.user?.name || userData.user?.email || 'User');
+        setIsLoading(true);
+        
+        // Try multiple API paths that might work in different environments
+        let userData = null;
+        const apiPaths = [
+          '/api/users/me',
+          `${window.location.origin}/api/users/me`,
+          '/admin/api/users/me'
+        ];
+        
+        for (const path of apiPaths) {
+          try {
+            console.log(`Attempting to fetch user data from: ${path}`);
+            const response = await fetch(path);
+            
+            if (response.ok) {
+              userData = await response.json();
+              console.log('User data fetched successfully:', userData);
+              break;
+            }
+          } catch (e) {
+            console.log(`Fetch attempt failed for ${path}:`, e);
+            // Continue to next path
+          }
+        }
+        
+        if (userData && userData.user) {
+          setUserName(userData.user.name || userData.user.email || 'User');
+          setError(null);
+        } else {
+          console.warn('Could not retrieve user data from any endpoint');
+          setError('Could not load user data');
         }
       } catch (error) {
         console.error('Failed to fetch user:', error);
+        setError('Could not load user data');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -29,7 +62,13 @@ const BeforeDashboard: React.FC = () => {
   return (
     <div className={baseClass}>
       <Banner className={`${baseClass}__banner`} type="success">
-        <h4>Welcome to your dashboard, {userName}!</h4>
+        {isLoading ? (
+          <h4>Loading user information...</h4>
+        ) : error ? (
+          <h4>Welcome to your dashboard!</h4>
+        ) : (
+          <h4>Welcome to your dashboard, {userName}!</h4>
+        )}
       </Banner>
       Here&apos;s what to do next:
       <ul className={`${baseClass}__instructions`}>
