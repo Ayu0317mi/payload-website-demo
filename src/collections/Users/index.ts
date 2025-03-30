@@ -21,7 +21,7 @@ export const Users: CollectionConfig = {
   auth: true,
   hooks: {
     beforeChange: [
-      ({ data, req }) => {
+      ({ data }) => {
         if (!data.role) {
           data.role = 'user' // Default role for new users
         }
