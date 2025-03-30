@@ -200,6 +200,10 @@ export interface Page {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  settings?: {
+    showInNav?: boolean | null;
+    showInFooter?: boolean | null;
+  };
   publishedAt?: string | null;
   slug?: string | null;
   slugLock?: boolean | null;
@@ -374,6 +378,7 @@ export interface Category {
 export interface User {
   id: string;
   name?: string | null;
+  role: 'user' | 'admin';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1025,6 +1030,12 @@ export interface PagesSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  settings?:
+    | T
+    | {
+        showInNav?: T;
+        showInFooter?: T;
+      };
   publishedAt?: T;
   slug?: T;
   slugLock?: T;
@@ -1266,6 +1277,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

@@ -111,6 +111,24 @@ export const Pages: CollectionConfig<'pages'> = {
             }),
           ],
         },
+        {
+          name: 'settings',
+          label: 'Settings',
+          fields: [
+            {
+              name: 'showInNav',
+              type: 'checkbox',
+              label: 'Show in Navigation',
+              defaultValue: false,
+            },
+            {
+              name: 'showInFooter',
+              type: 'checkbox',
+              label: 'Show in Footer',
+              defaultValue: false,
+            },
+          ],
+        },
       ],
     },
     {
