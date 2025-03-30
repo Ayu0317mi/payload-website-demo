@@ -32,6 +32,10 @@ export const MediaBlock: React.FC<Props> = (props) => {
   let caption
   if (media && typeof media === 'object') caption = media.caption
 
+  // Check if we're on a post page
+  const isPostPage = typeof window !== 'undefined' && 
+    window.location.pathname.includes('/posts/');
+
   return (
     <div
       className={cn(
@@ -47,6 +51,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
           imgClassName={cn('border border-border rounded-[0.8rem]', imgClassName)}
           resource={media}
           src={staticImage}
+          priority={isPostPage} // Prioritize media loading on post pages
         />
       )}
       {caption && (

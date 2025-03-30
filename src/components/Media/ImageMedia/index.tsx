@@ -4,7 +4,7 @@ import type { StaticImageData } from 'next/image'
 
 import { cn } from '@/utilities/ui'
 import NextImage from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import type { Props as MediaProps } from '../types'
 
@@ -23,17 +23,32 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     fill,
     pictureClassName,
     imgClassName,
-    priority,
+    priority: priorityFromProps,
     resource,
     size: sizeFromProps,
     src: srcFromProps,
     loading: loadingFromProps,
   } = props
 
+  // Add state for loaded status
+  const [isLoaded, setIsLoaded] = useState(false);
+  
   let width: number | undefined
   let height: number | undefined
   let alt = altFromProps
   let src: StaticImageData | string = srcFromProps || ''
+
+  // Force priority for post hero images and important media
+  const shouldForcePriority = priorityFromProps || 
+    (resource && typeof resource === 'object' && 
+     (resource.filename?.includes('hero') || resource.alt?.includes('hero')));
+
+  // Determine if this is a post image
+  const isPostImage = typeof window !== 'undefined' && 
+    window.location.pathname.includes('/posts/');
+
+  // Set priority for post images to ensure they load immediately
+  const priority = shouldForcePriority || isPostImage;
 
   if (!src && resource && typeof resource === 'object') {
     const { alt: altFromResource, height: fullHeight, url, width: fullWidth } = resource
@@ -49,6 +64,25 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
 
+  // Handle image load completion
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+    if (props.onLoad) {
+      props.onLoad();
+    }
+  };
+
+  // Force rerender after client navigation
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isPostImage && !isLoaded) {
+      // Small timeout to ensure image gets priority after navigation
+      const timer = setTimeout(() => {
+        setIsLoaded(false);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [isPostImage, isLoaded]);
+
   // NOTE: this is used by the browser to determine which image to download at different screen sizes
   const sizes = sizeFromProps
     ? sizeFromProps
@@ -60,7 +94,10 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
     <picture className={cn(pictureClassName)}>
       <NextImage
         alt={alt || ''}
-        className={cn(imgClassName)}
+        className={cn(imgClassName, {
+          'opacity-0 transition-opacity duration-500': !isLoaded,
+          'opacity-100': isLoaded
+        })}
         fill={fill}
         height={!fill ? height : undefined}
         placeholder="blur"
@@ -71,6 +108,7 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
         sizes={sizes}
         src={src}
         width={!fill ? width : undefined}
+        onLoad={handleImageLoad}
       />
     </picture>
   )
