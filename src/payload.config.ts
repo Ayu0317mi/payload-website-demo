@@ -20,6 +20,10 @@ import { getServerSideURL } from './utilities/getURL'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+if (!process.env.VERCEL_BLOB_STORAGE_TOKEN) {
+  console.warn('⚠️ VERCEL_BLOB_STORAGE_TOKEN is not set. Media uploads may not work!')
+}
+
 export default buildConfig({
   admin: {
     components: {
@@ -67,12 +71,11 @@ export default buildConfig({
   globals: [Header, Footer],
   plugins: [
     ...plugins,
-    // storage-adapter-placeholder
     vercelBlobStorage({
       collections: {
-        media: true
+        media: true,  // Enable media uploads
       },
-      token: process.env.VERCEL_BLOB_STORAGE_TOKEN
+      token: process.env.VERCEL_BLOB_STORAGE_TOKEN,
     }),
   ],
   secret: process.env.PAYLOAD_SECRET,
