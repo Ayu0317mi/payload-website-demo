@@ -40,6 +40,13 @@ export const Pages: CollectionConfig<'pages'> = {
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
+    // Hide the Pages collection from users who aren't admin or author
+    hidden: ({ user }) => {
+      if (user && (user.role === 'admin')) {
+        return false; // Show to admins
+      }
+      return true; // Hide from everyone else
+    },
     livePreview: {
       url: ({ data, req }) => {
         const path = generatePreviewPath({

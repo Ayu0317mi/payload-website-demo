@@ -49,7 +49,15 @@ export const Posts: CollectionConfig<'posts'> = {
     },
   },
   admin: {
+    useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'updatedAt'],
+    // Hide the Posts collection from users who aren't admin or author
+    hidden: ({ user }) => {
+      if (user && (user.role === 'admin' || user.role === 'author')) {
+        return false; // Show to admins and authors
+      }
+      return true; // Hide from everyone else
+    },
     livePreview: {
       url: ({ data, req }) => {
         const path = generatePreviewPath({
@@ -67,7 +75,6 @@ export const Posts: CollectionConfig<'posts'> = {
         collection: 'posts',
         req,
       }),
-    useAsTitle: 'title',
   },
   fields: [
     {

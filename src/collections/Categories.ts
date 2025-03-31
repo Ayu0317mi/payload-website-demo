@@ -16,6 +16,13 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    // Hide the Categories collection from users who aren't admin or author
+    hidden: ({ user }) => {
+      if (user && (user.role === 'admin' || user.role === 'author')) {
+        return false; // Show to admins and authors
+      }
+      return true; // Hide from everyone else
+    },
   },
   fields: [
     {

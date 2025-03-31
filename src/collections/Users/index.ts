@@ -15,20 +15,10 @@ export const Users: CollectionConfig = {
     update: isAdminOrSelf,
   },
   admin: {
-    defaultColumns: ['name', 'email'],
+    defaultColumns: ['name', 'email', 'role'],
     useAsTitle: 'name',
   },
   auth: true,
-  hooks: {
-    beforeChange: [
-      ({ data }) => {
-        if (!data.role) {
-          data.role = 'user' // Default role for new users
-        }
-        return data
-      },
-    ],
-  },
   fields: [
     {
       name: 'name',
@@ -41,8 +31,28 @@ export const Users: CollectionConfig = {
       defaultValue: 'user',
       options: [
         { label: 'User', value: 'user' },
+        { label: 'Author', value: 'author' },
         { label: 'Admin', value: 'admin' },
       ],
+      access: {
+        // Only admins can update the role field
+        update: ({ req }) => req?.user?.role === 'admin',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, req, operation, originalDoc }) => {
+            // For update operations, check role changes
+            if (operation === 'update' && req?.user) {
+              // Non-admins cannot change roles
+              if (req.user.role !== 'admin' && originalDoc && value !== originalDoc.role) {
+                // Return a validation error
+                throw new Error('No permission to change role.');
+              }
+            }
+            return value;
+          },
+        ],
+      },
     },
   ],
   timestamps: true,
