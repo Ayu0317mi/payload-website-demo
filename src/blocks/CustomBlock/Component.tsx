@@ -1,23 +1,76 @@
+import type { Post, CustomBlock as CustomBlockProps } from '@/payload-types'
+
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 import React from 'react'
-
-import type { CallToActionBlock as CTABlockProps } from '@/payload-types'
-
 import RichText from '@/components/RichText'
-import { CMSLink } from '@/components/Link'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
-export const CustomBlockComponent: React.FC<CTABlockProps> = ({ links, richText }) => {
+import { CollectionArchive } from '@/components/CollectionArchive'
+
+export const CustomBlockComponent: React.FC<
+  CustomBlockProps & {
+    id?: string
+  }
+> = async (props) => {
+  const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+
+  const limit = limitFromProps || 3
+
+  let posts: Post[] = []
+
+  if (populateBy === 'collection') {
+    const payload = await getPayload({ config: configPromise })
+
+    const flattenedCategories = categories?.map((category) => {
+      if (typeof category === 'object') return category.id
+      else return category
+    })
+
+    const fetchedPosts = await payload.find({
+      collection: 'posts',
+      depth: 1,
+      limit,
+      ...(flattenedCategories && flattenedCategories.length > 0
+        ? {
+            where: {
+              categories: {
+                in: flattenedCategories,
+              },
+            },
+          }
+        : {}),
+    })
+
+    posts = fetchedPosts.docs
+  } else {
+    if (selectedDocs?.length) {
+      const filteredSelectedPosts = selectedDocs.map((post) => {
+        if (typeof post.value === 'object') return post.value
+      }) as Post[]
+
+      posts = filteredSelectedPosts
+    }
+  }
+
   return (
-    <div className="container">
-      <div className="bg-card rounded border-border border p-4 flex flex-col gap-8 md:flex-row md:justify-between md:items-center">
-        <div className="max-w-[48rem] flex items-center">
-          {richText && <RichText className="mb-0" data={richText} enableGutter={false} />}
+    <div className="my-16" id={`block-${id}`}>
+      {introContent && (
+        <div className="container mb-16">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
+            <Link href="/posts" className="shrink-0">
+              <Button variant="default" size="lg" className="group">
+                View all articles
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-8">
-          {(links || []).map(({ link }, i) => {
-            return <CMSLink key={i} size="lg" {...link} />
-          })}
-        </div>
-      </div>
+      )}
+      <CollectionArchive posts={posts} />
     </div>
   )
 }
