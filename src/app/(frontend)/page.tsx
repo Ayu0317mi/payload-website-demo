@@ -4,13 +4,13 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { homeStatic } from '@/endpoints/seed/home-static'
 import HomePageClient from './home.client'
-import { SidebarLayout } from '@/components/SidebarLayout'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { generateMetadata } from './[slug]/page'
 import { Page } from '@/payload-types'
+import { SidebarWrapper } from '@/components/SidebarWrapper'
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
@@ -68,10 +68,10 @@ export default async function HomePage() {
       {/* Hero section is full width, outside the sidebar layout */}
       <RenderHero {...hero} />
       
-      {/* Main content wrapped in sidebar layout */}
-      <SidebarLayout>
+      {/* Main content wrapped in sidebar wrapper */}
+      <SidebarWrapper>
         <RenderBlocks blocks={layout} />
-      </SidebarLayout>
+      </SidebarWrapper>
     </article>
   )
 }

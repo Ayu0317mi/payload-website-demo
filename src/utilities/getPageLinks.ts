@@ -22,10 +22,11 @@ export const getPageLinks = cache(async () => {
           },
         ],
       },
+
       sort: 'title',
     })
 
-    // Filter pages that should be shown in navigation
+
     const navPages = pages.docs.filter(page => {
       return page.settings?.showInNav === true;
     });
@@ -42,17 +43,19 @@ export const getPageLinks = cache(async () => {
           url: page.slug === 'home' ? '/' : `/${page.slug}`,
         }));
 
-    // Add a link to the Posts collection
     links.push({
       label: 'Posts',
       url: '/posts',
     });
 
-    // Sort the links alphabetically by label
-    return links.sort((a, b) => a.label.localeCompare(b.label));
+    // First, find and remove the Home link
+    const homeIndex = links.findIndex(link => link.url === '/');
+    const homeLink = homeIndex !== -1 ? links.splice(homeIndex, 1)[0] : { label: 'Home', url: '/' };
+    
+    return [homeLink, ...links];
   } catch (error) {
     console.error('Error fetching page links:', error);
-    // Return default links if there's an error
+
     return [
       { label: 'Home', url: '/' },
       { label: 'Posts', url: '/posts' },

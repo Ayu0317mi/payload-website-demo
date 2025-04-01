@@ -5,19 +5,23 @@ import { HomeSidebar } from './HomeSidebar'
 interface DynamicSidebarProps {
   title?: string
   _newsletterSignup?: boolean
+  initialLinks?: Array<{
+    label: string
+    url: string
+  }>
 }
 
 export function DynamicSidebar({ 
   title = 'Navigation',
-  _newsletterSignup = true 
+  _newsletterSignup = true,
+  initialLinks = []
 }: DynamicSidebarProps) {
-  // Use client-side state instead of server-side data fetching
-  const [links, setLinks] = useState([
-    { label: 'Home', url: '/' },
-  ])
-  
-  // In a real implementation, you would fetch these links client-side
-  // using an API endpoint instead of the direct server function
+  // Use the initial links provided as props, or fallback to Home
+  const [links, setLinks] = useState(
+    initialLinks.length > 0 
+      ? initialLinks 
+      : [{ label: 'Home', url: '/' }]
+  )
   
   return (
     <HomeSidebar 
