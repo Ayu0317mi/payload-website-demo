@@ -9,7 +9,9 @@ interface SidebarWrapperProps {
 
 export async function SidebarWrapper({ children }: SidebarWrapperProps) {
   // Fetch page links using the server-side utility
-  const navigationLinks = await getPageLinks()
+  const navigationLinks = (await getPageLinks()).filter(
+    (link): link is { label: string; url: string } => link !== undefined
+  )
   
   // Pass the links as props to the client component
   return (

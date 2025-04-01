@@ -46,7 +46,6 @@ export const CollectionArchive: React.FC<Props> = (props) => {
             
             // Get author info
             let authorName = 'Unknown'
-            const authorRole = 'Author'
             let authorInitial = 'U'
             const authorImage = ''
             

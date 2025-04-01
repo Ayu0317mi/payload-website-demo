@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { HomeSidebar } from './HomeSidebar'
 
 interface DynamicSidebarProps {
@@ -17,7 +17,7 @@ export function DynamicSidebar({
   initialLinks = []
 }: DynamicSidebarProps) {
   // Use the initial links provided as props, or fallback to Home
-  const [links, setLinks] = useState(
+  const [links] = useState(
     initialLinks.length > 0 
       ? initialLinks 
       : [{ label: 'Home', url: '/' }]
