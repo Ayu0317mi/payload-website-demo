@@ -4,12 +4,15 @@ import { getPageLinks } from '@/utilities/getPageLinks'
 
 interface DynamicSidebarProps {
   title?: string
-  newsletterSignup?: boolean
+  // Keep the property but mark it with an underscore since we're not using it
+  // but it might be needed in the future
+  _newsletterSignup?: boolean
 }
 
 export async function DynamicSidebar({ 
-  title = 'Navigation', 
-  newsletterSignup = true 
+  title = 'Navigation',
+  // Renamed to follow ESLint naming convention for unused variables
+  _newsletterSignup = true 
 }: DynamicSidebarProps) {
   // Fetch links from Pages collection
   const links = await getPageLinks()

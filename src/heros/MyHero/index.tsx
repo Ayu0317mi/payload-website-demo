@@ -21,11 +21,11 @@ export const MyHero: React.FC<Page['hero']> = ({ links, media, richText }) => {
       className="relative -mt-[10.4rem] flex items-center justify-center text-white"
       data-theme="dark"
     >
-      <div className="container mb-8 z-10 relative flex items-center justify-center">
+      <div className="container mb-8 z-10 relative flex items-start justify-start">
         <div className="max-w-[36.5rem] text-left">
           {richText && <RichText className="mb-6" data={richText} enableGutter={false} />}
           {Array.isArray(links) && links.length > 0 && (
-            <ul className="flex md:justify-center gap-4">
+            <ul className="flex gap-4">
               {links.map(({ link }, i) => {
                 return (
                 <li key={i}>

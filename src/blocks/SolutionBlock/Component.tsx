@@ -1,10 +1,11 @@
 import { cn } from '@/utilities/ui'
 import React from 'react'
 import RichText from '@/components/RichText'
+import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 
 // Instead of importing a non-existent type, we'll define it here temporarily
 // using ContentBlock as a reference
-import type { ContentBlock } from '@/payload-types'
+import type { ContentBlock, Page, Post } from '@/payload-types'
 
 import { CMSLink } from '../../components/Link'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,18 +15,22 @@ import { ArrowRight } from 'lucide-react'
 // Create a temporary type for SolutionBlock based on ContentBlock
 type SolutionBlockProps = Omit<ContentBlock, 'blockType'> & {
   blockType: 'solution';
-  introContent?: any;
+  introContent?: DefaultTypedEditorState;
+  columns?: ColumnItem[];
 }
 
 // Define a type for the column item
 type ColumnItem = {
   size?: 'oneThird' | 'half' | 'twoThirds' | 'full' | null;
-  richText?: any;
+  richText?: DefaultTypedEditorState;
   enableLink?: boolean | null;
   link?: {
     type?: 'reference' | 'custom' | null;
     newTab?: boolean | null;
-    reference?: any;
+    reference?: {
+      relationTo: 'pages' | 'posts';
+      value: string | number | Page | Post;
+    } | null;
     url?: string | null;
     label: string;
     appearance?: 'default' | 'outline' | null;
@@ -53,6 +58,7 @@ export const SolutionBlock: React.FC<SolutionBlockProps> = (props) => {
       
       <div className="grid grid-cols-4 lg:grid-cols-12 gap-y-8 gap-x-6 lg:gap-x-8">
         {columns &&
+          Array.isArray(columns) &&
           columns.length > 0 &&
           columns.map((col: ColumnItem, index: number) => {
             const { enableLink, link, richText, size } = col

@@ -46,9 +46,9 @@ export const CollectionArchive: React.FC<Props> = (props) => {
             
             // Get author info
             let authorName = 'Unknown'
-            let authorRole = 'Author'
+            const authorRole = 'Author'
             let authorInitial = 'U'
-            let authorImage = ''
+            const authorImage = ''
             
             // Check if there's at least one author
             if (authors && authors.length > 0) {
@@ -58,10 +58,6 @@ export const CollectionArchive: React.FC<Props> = (props) => {
                 if ('name' in firstAuthor && firstAuthor.name) {
                   authorName = firstAuthor.name as string
                   authorInitial = authorName.charAt(0)
-                }
-                
-                if ('role' in firstAuthor && firstAuthor.role) {
-                  authorRole = firstAuthor.role as string
                 }
               }
             }
