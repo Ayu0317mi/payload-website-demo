@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { Sidebar } from '@/components/Sidebar'
 
@@ -14,7 +15,7 @@ export const HomeSidebar: React.FC<SidebarContentProps> = ({
   links = [], 
 }) => {
   return (
-    <Sidebar className="sticky top-24">
+    <Sidebar>
       {title && <h3 className="text-xl font-bold mb-4">Page Navi</h3>}
       
       {links.length > 0 && (
@@ -23,7 +24,7 @@ export const HomeSidebar: React.FC<SidebarContentProps> = ({
             <div key={i} className="py-2 border-b border-border last:border-0">
               <a 
                 href={link.url} 
-                className="text-primary hover:text-primary/80 transition-colors"
+                className="text-primary hover:text-primary/90 transition-colors"
               >
                 {link.label}
               </a>
