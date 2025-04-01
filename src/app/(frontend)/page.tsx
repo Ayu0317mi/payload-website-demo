@@ -8,9 +8,9 @@ import { SidebarLayout } from '@/components/SidebarLayout'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
-import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
+import { getPayload } from 'payload'
 import { generateMetadata } from './[slug]/page'
-
+import { Page } from '@/payload-types'
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
@@ -38,7 +38,12 @@ export default async function HomePage() {
   const slug = 'home'
   const url = '/'
 
-  let page: any = await queryPageBySlug({
+  interface PageWithLayout extends Partial<Page> {
+    hero: Page['hero']
+    layout: Page['layout']
+  }
+
+  let page: PageWithLayout | null = await queryPageBySlug({
     slug,
   })
 

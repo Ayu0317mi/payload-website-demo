@@ -23,7 +23,6 @@ export async function DynamicSidebar({
     <HomeSidebar 
       title={title}
       links={links.length > 0 ? links : defaultLinks}
-      newsletterSignup={newsletterSignup}
     />
   )
 }

@@ -9,7 +9,6 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { isAdminOrAuthor } from '../../access/isAdminOrAuthor'
 import { Banner } from '../../blocks/Banner/config'

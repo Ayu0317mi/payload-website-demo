@@ -1,6 +1,5 @@
 import React from 'react'
 import { Sidebar } from '@/components/Sidebar'
-import { Button } from '@/components/ui/button'
 
 interface SidebarContentProps {
   title?: string
@@ -8,13 +7,11 @@ interface SidebarContentProps {
     label: string
     url: string
   }>
-  newsletterSignup?: boolean
 }
 
 export const HomeSidebar: React.FC<SidebarContentProps> = ({ 
   title = 'Sidebar Navigation', 
   links = [], 
-  newsletterSignup = true 
 }) => {
   return (
     <Sidebar className="sticky top-24">

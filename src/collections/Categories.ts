@@ -1,8 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
-import { isAdmin } from '../access/isAdmin'
 import { isAdminOrAuthor } from '../access/isAdminOrAuthor'
 import { slugField } from '@/fields/slug'
 

@@ -31,7 +31,7 @@ export const getPageLinks = cache(async () => {
     });
 
     // Create links from pages that should be shown in navigation
-    let links = navPages.length > 0 
+    const links = navPages.length > 0 
       ? navPages.map(page => ({
           label: page.title || 'Untitled Page',
           url: page.slug === 'home' ? '/' : `/${page.slug}`,
