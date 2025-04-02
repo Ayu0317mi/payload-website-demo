@@ -3,6 +3,10 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { Menu } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/utilities/ui'
+import { useSidebar } from '@/providers/SidebarContext'
 
 import type { Header } from '@/payload-types'
 
@@ -15,31 +19,43 @@ interface HeaderClientProps {
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
-  /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
+  const { isOpen, setIsOpen } = useSidebar()
 
   useEffect(() => {
     setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   useEffect(() => {
     if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [headerTheme])
+  }, [headerTheme, theme])
 
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-border/40" 
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-border/40 transition-[margin] duration-300",
+        isOpen ? "lg:ml-[320px]" : ""
+      )}
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="container">
         <div className="py-4 flex items-center justify-between">
-          <Link href="/">
-            <Logo loading="eager" priority="high" className="invert dark:invert-0" />
-          </Link>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+              className="rounded-full"
+              aria-label={isOpen ? "Close navigation" : "Open navigation"}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <Link href="/">
+              <Logo loading="eager" priority="high" className="invert dark:invert-0" />
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <HeaderNav data={data} />
             <ThemeSelector />

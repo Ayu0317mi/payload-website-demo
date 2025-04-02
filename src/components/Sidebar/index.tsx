@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, LogOut, LogIn, User, Home, ChevronRight } from 'lucide-react'
+import { X, LogOut, LogIn, User, Home, ChevronRight } from 'lucide-react'
 import { cn } from '@/utilities/ui'
+import { useSidebar } from '@/providers/SidebarContext'
 
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -39,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   links = [],
   title = 'Navigation'
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, setIsOpen } = useSidebar()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const pathname = usePathname()
@@ -70,24 +71,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
     checkUserAuth()
   }, [])
 
-  // Default navigation links if none provided
   const navigationLinks = links.length > 0 ? links : [
     { label: 'Home', url: '/' },
     { label: 'Blog', url: '/posts' },
     { label: 'About', url: '/about' }
   ]
 
-  // Toggle sidebar
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen)
-  }
-
-  // Close the sidebar when a link is clicked
   const handleLinkClick = () => {
     setIsOpen(false)
   }
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       const res = await fetch('/api/users/logout', {
@@ -97,7 +90,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       
       if (res.ok) {
         setUser(null)
-        // Optionally redirect to home page
         window.location.href = '/'
       }
     } catch (error) {
@@ -107,20 +99,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Toggle button - only visible when sidebar is closed */}
-      {!isOpen && (
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleSidebar}
-          className="fixed z-50 top-24 left-4 lg:left-6 p-2 rounded-full shadow-md"
-          aria-label="Open navigation"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-      )}
-      
-      {/* Sidebar */}
       <aside 
         className={cn(
           'fixed left-0 top-0 h-full z-40 w-[280px] sm:w-[320px] bg-background border-r border-border transform transition-transform duration-300 ease-in-out flex flex-col',
@@ -129,7 +107,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
       >
         <div className="flex flex-col h-full">
-          {/* Sidebar Header with Logo and Close Button */}
           <div className="p-4 border-b border-border flex items-center justify-between">
             <Link href="/" onClick={handleLinkClick} className="flex items-center">
               <Logo className="invert dark:invert-0" />
@@ -137,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleSidebar}
+              onClick={() => setIsOpen(false)}
               className="rounded-full"
               aria-label="Close sidebar"
             >
@@ -145,7 +122,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </Button>
           </div>
           
-          {/* Sidebar Content */}
           <div className="flex-1 overflow-auto p-4">
             {title && <h3 className="text-xl font-bold mb-4">{title}</h3>}
             
@@ -164,7 +140,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   {link.label === "Home" && <Home className="mr-2 h-4 w-4" />}
                   {link.label !== "Home" && <ChevronRight className="mr-2 h-4 w-4" />}
-                  {link.label }
+                  {link.label}
                 </Link>
               ))}
             </div>
@@ -172,7 +148,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {children}
           </div>
           
-          {/* User Section at Bottom */}
           <div className="p-4 border-t border-border mt-auto">
             {isLoading ? (
               <div className="flex items-center">
@@ -218,11 +193,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </aside>
       
-      {/* Overlay for both mobile and desktop - only shown when sidebar is open */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/20 z-30"
-          onClick={toggleSidebar}
+          onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
       )}
