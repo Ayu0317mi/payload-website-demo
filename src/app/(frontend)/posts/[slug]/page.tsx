@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { CalendarDays, Clock } from 'lucide-react'
+import { Clock } from 'lucide-react'
 
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -9,6 +9,7 @@ import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
+import { CalendarDaysIcon } from 'lucide-react'
 
 import type { Post } from '@/payload-types'
 
@@ -90,14 +91,19 @@ export default async function Post({ params: paramsPromise }: Args) {
                       <span className="text-sm font-medium text-foreground">
                         {formatAuthors(post.populatedAuthors)}
                       </span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
+                    <CalendarDaysIcon className="h-4 w-4" />
+                  </div>
                       {post.publishedAt && (
+                        
                       <time dateTime={post.publishedAt} className="text-sm font-medium text-foreground">
                         {formatDateTime(post.publishedAt)}
                       </time>
                       )}
-                    </div>
-                  )}
-                  
                 </div>
 
                 <div className="flex items-center gap-2">

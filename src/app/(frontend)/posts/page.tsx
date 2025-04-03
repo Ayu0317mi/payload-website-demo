@@ -22,13 +22,6 @@ export default async function Page({ searchParams }: Args) {
   const { q: query, page, category } = searchParams
   const payload = await getPayload({ config: configPromise })
 
-  // Fetch categories
-  const categories = await payload.find({
-    collection: 'categories',
-    limit: 100,
-    depth: 0,
-  })
-
   const posts = await payload.find({
     collection: 'posts',
     depth: 1,
@@ -65,7 +58,6 @@ export default async function Page({ searchParams }: Args) {
         ...(category
           ? [{
               categories: {
-                exists: true,
                 in: [category],
               },
             }]

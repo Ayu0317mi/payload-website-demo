@@ -1,8 +1,8 @@
-import { cn } from '@/utilities/ui'
 import React from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { CalendarDays } from 'lucide-react'
+import { cn } from '@/utilities/ui'
 
 import type { Post } from '@/payload-types'
 import {
@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title' | 'createdAt' | 'authors'>
@@ -76,7 +75,7 @@ export const CollectionArchive: React.FC<Props> = (props) => {
                       {formattedDate}
                     </div>
                     <CardTitle className="line-clamp-2">
-                      <Link href={href}>{title}</Link>
+                      {title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow">

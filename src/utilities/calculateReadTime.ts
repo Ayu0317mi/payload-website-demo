@@ -1,34 +1,32 @@
-export const calculateReadTime = (content: any): string => {
-  // Function to count words in a text string
-  const countWords = (text: string): number => {
-    return text.trim().split(/\s+/).length;
-  };
+type BaseNode = {
+  type: string;
+  [key: string]: unknown;
+}
 
-  // Function to extract text from rich text content
-  const extractText = (node: any): string => {
-    if (typeof node === 'string') return node;
-    if (!node) return '';
-    
-    if (node.text) return node.text;
-    
-    if (node.children) {
-      return node.children.map((child: any) => extractText(child)).join(' ');
+type Content = {
+  root: BaseNode;
+}
+
+export const calculateReadTime = (content: Content | undefined): string => {
+  if (!content) return '0 min read'
+  
+  const wordsPerMinute = 200
+  let wordCount = 0
+
+  // Recursively traverse the content tree to count words
+  const countWords = (node: BaseNode): number => {
+    if ('text' in node && typeof node.text === 'string') {
+      return node.text.trim().split(/\s+/).length
     }
 
-    if (Array.isArray(node)) {
-      return node.map(item => extractText(item)).join(' ');
+    if ('children' in node && Array.isArray(node.children)) {
+      return node.children.reduce((acc: number, child: BaseNode) => acc + countWords(child), 0)
     }
 
-    return '';
-  };
+    return 0
+  }
 
-  // Extract all text from the rich text content
-  const text = extractText(content);
-  
-  // Calculate reading time
-  const words = countWords(text);
-  const wordsPerMinute = 225; // Average reading speed
-  const minutes = Math.ceil(words / wordsPerMinute);
-  
-  return minutes === 1 ? '1 min read' : `${minutes} min read`;
+  wordCount = countWords(content.root)
+  const minutes = Math.ceil(wordCount / wordsPerMinute)
+  return `${minutes} min read`
 }
