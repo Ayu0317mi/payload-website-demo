@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { CalendarDays, Clock } from 'lucide-react'
 
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { Media } from '@/components/Media'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -10,8 +12,10 @@ import RichText from '@/components/RichText'
 
 import type { Post } from '@/payload-types'
 
-import { PostHero } from '@/heros/PostHero'
+import { formatDateTime } from '@/utilities/formatDateTime'
+import { formatAuthors } from '@/utilities/formatAuthors'
 import { generateMeta } from '@/utilities/generateMeta'
+import { calculateReadTime } from '@/utilities/calculateReadTime'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
@@ -52,25 +56,91 @@ export default async function Post({ params: paramsPromise }: Args) {
   return (
     <article className="pt-16 pb-16">
       <PageClient />
-
-      {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
-
       {draft && <LivePreviewListener />}
 
-      <PostHero post={post} />
+      <main>
+        <div className="container mx-auto px-4 py-8">
+          <article className="max-w-3xl mx-auto">
+            <header className="mb-8">
+              {post.categories && post.categories.length > 0 && (
+                <div className="categories">
+                  {post.categories.map((category, index) => {
+                    if (typeof category === 'object' && category !== null) {
+                      return (
+                        <React.Fragment key={category.id}>
+                          {category.title}
+                          {index < (post.categories?.length || 0) - 1 ? ', ' : ''}
+                        </React.Fragment>
+                      )
+                    }
+                    return null
+                  })}
+                </div>
+              )}
+              <h1 className="mb-6 text-3xl md:text-5xl lg:text-6xl">{post.title}</h1>
+              
+              <div className="flex gap-8 text-sm text-muted-foreground">
+                <div className="flex flex-col gap-4">
+                  {post.populatedAuthors && post.populatedAuthors.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
+                        {post.populatedAuthors[0]?.name?.[0]?.toUpperCase() || '?'}
+                      </div>
+                      <span className="text-sm font-medium text-foreground">
+                        {formatAuthors(post.populatedAuthors)}
+                      </span>
+                      {post.publishedAt && (
+                      <time dateTime={post.publishedAt} className="text-sm font-medium text-foreground">
+                        {formatDateTime(post.publishedAt)}
+                      </time>
+                      )}
+                    </div>
+                  )}
+                  
+                </div>
 
-      <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <RelatedPosts
-              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-            />
-          )}
+                <div className="flex items-center gap-2">
+                  <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
+                    <Clock className="h-4 w-4" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground">
+                    {calculateReadTime(post.content)}
+                  </span>
+                </div>
+              </div>
+            </header>
+          </article>
         </div>
-      </div>
+
+        {post.heroImage && typeof post.heroImage === 'object' && (
+          <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh] xl:h-[80vh]">
+            <Media
+              resource={post.heroImage}
+              priority
+              fill
+              imgClassName="object-cover"
+            />
+          </div>
+        )}
+
+        <div className="container mx-auto px-4 py-8">
+          <article className="max-w-3xl mx-auto">
+            <div className="prose prose-lg max-w-none">
+              <RichText data={post.content} enableGutter={false} />
+            </div>
+
+            {post.relatedPosts && post.relatedPosts.length > 0 && (
+              <footer className="mt-8 pt-6 border-t">
+                <RelatedPosts
+                  className="mt-12"
+                  docs={post.relatedPosts.filter((post) => typeof post === 'object')}
+                />
+              </footer>
+            )}
+          </article>
+        </div>
+      </main>
     </article>
   )
 }
