@@ -2,23 +2,76 @@ import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
-import { Pagination } from '@/components/Pagination'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import PageClient from './page.client'
+import { PostSearch } from './PostSearch'
+
+type Args = {
+  searchParams: {
+    q?: string
+    page?: string
+    category?: string
+  }
+}
 
 export const dynamic = 'force-static'
 export const revalidate = 600
 
-export default async function Page() {
+export default async function Page({ searchParams }: Args) {
+  const { q: query, page, category } = searchParams
   const payload = await getPayload({ config: configPromise })
+
+  // Fetch categories
+  const categories = await payload.find({
+    collection: 'categories',
+    limit: 100,
+    depth: 0,
+  })
 
   const posts = await payload.find({
     collection: 'posts',
     depth: 1,
     limit: 12,
-    overrideAccess: false,
+    page: page ? parseInt(page) : 1,
+    where: {
+      and: [
+        ...(query
+          ? [{
+              or: [
+                {
+                  title: {
+                    like: query,
+                  },
+                },
+                {
+                  'meta.description': {
+                    like: query,
+                  },
+                },
+                {
+                  'meta.title': {
+                    like: query,
+                  },
+                },
+                {
+                  'content.root.children.children.text': {
+                    like: query,
+                  },
+                },
+              ],
+            }]
+          : []),
+        ...(category
+          ? [{
+              categories: {
+                exists: true,
+                in: [category],
+              },
+            }]
+          : []),
+      ],
+    },
     select: {
       title: true,
       slug: true,
@@ -30,7 +83,6 @@ export default async function Page() {
 
   return (
     <div className="pt-24 pb-24">
-      <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
           <h1>Posts</h1>
@@ -38,21 +90,29 @@ export default async function Page() {
       </div>
 
       <div className="container mb-8">
-        <PageRange
-          collection="posts"
-          currentPage={posts.page}
-          limit={12}
-          totalDocs={posts.totalDocs}
-        />
+        <PostSearch />
       </div>
 
-      <CollectionArchive posts={posts.docs} />
+      {posts.totalDocs > 0 ? (
+        <>
+          <div className="container mb-8">
+            <PageRange
+              collection="posts"
+              currentPage={posts.page}
+              limit={12}
+              totalDocs={posts.totalDocs}
+            />
+          </div>
 
-      <div className="container">
-        {posts.totalPages > 1 && posts.page && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
-        )}
-      </div>
+          <CollectionArchive posts={posts.docs} />
+        </>
+      ) : (
+        <div className="container">
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            No posts found.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
