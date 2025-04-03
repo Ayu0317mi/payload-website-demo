@@ -62,50 +62,45 @@ export const CollectionArchive: React.FC<Props> = (props) => {
             }
 
             return (
-              <Card key={index} className="overflow-hidden flex flex-col h-full bg-white dark:bg-card rounded-xl">
-                {imageUrl && (
-                  <Link href={href}>
+              <Link href={href} key={index} className="block">
+                <Card className="overflow-hidden flex flex-col h-full bg-white dark:bg-card rounded-xl">
+                  {imageUrl && (
                     <div 
                       className="h-48 bg-cover bg-center hover:opacity-90 transition-opacity"
                       style={{ backgroundImage: `url(${imageUrl})` }}
                     />
-                  </Link>
-                )}
-                <CardHeader>
-                  <div className="flex items-center text-sm text-muted-foreground mb-2">
-                    <CalendarDays className="mr-1 h-4 w-4" />
-                    {formattedDate}
-                  </div>
-                  <CardTitle className="line-clamp-2">
-                    <Link href={href}>{title}</Link>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  {description && (
-                    <p className="text-muted-foreground line-clamp-3">{description}</p>
                   )}
-                </CardContent>
-                <CardFooter className="flex justify-between items-center pt-4">
-                  <div className="w-full px-3 py-3 border-t flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="h-8 w-8">
-                        {authorImage ? (
-                          <AvatarImage src={authorImage} />
-                        ) : null}
-                        <AvatarFallback>{authorInitial}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium">{authorName}</p>
+                  <CardHeader>
+                    <div className="flex items-center text-sm text-muted-foreground mb-2">
+                      <CalendarDays className="mr-1 h-4 w-4" />
+                      {formattedDate}
+                    </div>
+                    <CardTitle className="line-clamp-2">
+                      <Link href={href}>{title}</Link>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    {description && (
+                      <p className="text-muted-foreground line-clamp-3">{description}</p>
+                    )}
+                  </CardContent>
+                  <CardFooter className="flex justify-between items-center pt-4">
+                    <div className="w-full px-3 py-3 border-t flex justify-between items-center">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="h-8 w-8">
+                          {authorImage ? (
+                            <AvatarImage src={authorImage} />
+                          ) : null}
+                          <AvatarFallback>{authorInitial}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-medium">{authorName}</p>
+                        </div>
                       </div>
                     </div>
-                    <Link href={href}>
-                      <Button variant="default" size="sm">
-                        Read
-                      </Button>
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
+                  </CardFooter>
+                </Card>
+              </Link>
             )
           }
 
