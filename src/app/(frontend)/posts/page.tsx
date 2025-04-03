@@ -8,18 +8,18 @@ import React from 'react'
 import { PostSearch } from './PostSearch'
 
 type Args = {
-  searchParams: {
+  searchParams: Promise<{
     q?: string
     page?: string
     category?: string
-  }
+  }>
 }
 
 export const dynamic = 'force-static'
 export const revalidate = 600
 
-export default async function Page({ searchParams }: Args) {
-  const { q: query, page, category } = searchParams
+export default async function Page({ searchParams: searchParamsPromise }: Args) {
+  const { q: query, page, category } = await searchParamsPromise
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
