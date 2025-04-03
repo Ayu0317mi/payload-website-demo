@@ -57,7 +57,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <HeaderNav data={data} />
+            <div className="hidden md:block">
+              <HeaderNav data={data} />
+            </div>
             <ThemeSelector />
           </div>
         </div>
