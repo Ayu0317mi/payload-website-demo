@@ -92,7 +92,14 @@ export const CollectionArchive: React.FC<Props> = (props) => {
                       {categoryNames.length > 0 && (
                         <div className="flex items-center">
                           <Tag className="mr-1 h-4 w-4" />
-                          <span className="truncate max-w-[150px]">{categoryNames[0]}</span>
+                          <div className="flex gap-2 items-center">
+                            {categoryNames.map((category, i) => (
+                              <React.Fragment key={i}>
+                                <span className="truncate max-w-[100px]">{category}</span>
+                                {i < categoryNames.length - 1 && <span>•</span>}
+                              </React.Fragment>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>

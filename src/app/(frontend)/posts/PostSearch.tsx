@@ -1,6 +1,7 @@
 'use client';
 import React from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Search } from 'lucide-react'
 
 export const PostSearch: React.FC = () => {
   const router = useRouter()
@@ -35,13 +36,14 @@ export const PostSearch: React.FC = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
       <input
         type="search"
         placeholder="Search posts..."
         value={searchQuery}
         onChange={handleSearch}
-        className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:ring-blue-500"
+        className="w-full pl-10 pr-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:ring-blue-500"
       />
     </div>
   )
