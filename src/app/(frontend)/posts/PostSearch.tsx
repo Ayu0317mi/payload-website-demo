@@ -12,6 +12,17 @@ export const PostSearch: React.FC = () => {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams?.toString())
       params.set(name, value)
+      
+      // Reset to page 1 when searching
+      if (params.has('page')) {
+        params.delete('page')
+      }
+      
+      // Preserve category filter if it exists
+      if (searchParams?.has('category')) {
+        params.set('category', searchParams.get('category') || '')
+      }
+      
       return params.toString()
     },
     [searchParams]
@@ -24,7 +35,7 @@ export const PostSearch: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto mb-8">
+    <div className="w-full">
       <input
         type="search"
         placeholder="Search posts..."

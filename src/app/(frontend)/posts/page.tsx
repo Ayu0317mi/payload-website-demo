@@ -5,7 +5,7 @@ import { PageRange } from '@/components/PageRange'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import { PostSearch } from './PostSearch'
+import FilterSection from './FilterSection.client'
 
 type Args = {
   searchParams: Promise<{
@@ -15,54 +15,78 @@ type Args = {
   }>
 }
 
-export const dynamic = 'force-static'
+// Change to 'auto' to allow dynamic rendering based on search params
+export const dynamic = 'auto'
 export const revalidate = 600
 
 export default async function Page({ searchParams: searchParamsPromise }: Args) {
   const { q: query, page, category } = await searchParamsPromise
+  // Console log for debugging
+  console.log('Category filter param:', category, typeof category)
   const payload = await getPayload({ config: configPromise })
 
+  // Fetch categories for the filter
+  const categoriesData = await payload.find({
+    collection: 'categories',
+    limit: 100,
+  })
+  
+  const categories = categoriesData.docs.map(cat => ({
+    id: cat.id,
+    title: cat.title,
+    slug: cat.slug,
+  }))
+
+  // Build the query conditions
+  const queryConditions = [];
+  
+  if (query) {
+    queryConditions.push({
+      or: [
+        {
+          title: {
+            like: query,
+          },
+        },
+        {
+          'meta.description': {
+            like: query,
+          },
+        },
+        {
+          'meta.title': {
+            like: query,
+          },
+        },
+        {
+          'content.root.children.children.text': {
+            like: query,
+          },
+        },
+      ],
+    });
+  }
+  
+  if (category) {
+    console.log('Adding category filter for ID:', category);
+    // This is the correct way to filter by relationship field with hasMany:true
+    queryConditions.push({
+      categories: {
+        in: [category],
+      },
+    });
+  }
+  
+  // Log the final query for debugging
+  console.log('Final query conditions:', JSON.stringify(queryConditions));
+  
   const posts = await payload.find({
     collection: 'posts',
-    depth: 1,
+    depth: 2, // Increase depth to get full category data
     limit: 12,
     page: page ? parseInt(page) : 1,
     where: {
-      and: [
-        ...(query
-          ? [{
-              or: [
-                {
-                  title: {
-                    like: query,
-                  },
-                },
-                {
-                  'meta.description': {
-                    like: query,
-                  },
-                },
-                {
-                  'meta.title': {
-                    like: query,
-                  },
-                },
-                {
-                  'content.root.children.children.text': {
-                    like: query,
-                  },
-                },
-              ],
-            }]
-          : []),
-        ...(category
-          ? [{
-              categories: {
-                in: [category],
-              },
-            }]
-          : []),
-      ],
+      and: queryConditions,
     },
     select: {
       title: true,
@@ -70,6 +94,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
       categories: true,
       meta: true,
       createdAt: true,
+      authors: true, // Make sure authors are included for the CollectionArchive component
     },
   })
 
@@ -82,7 +107,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
       </div>
 
       <div className="container mb-8">
-        <PostSearch />
+        <FilterSection categories={categories} />
       </div>
 
       {posts.totalDocs > 0 ? (
