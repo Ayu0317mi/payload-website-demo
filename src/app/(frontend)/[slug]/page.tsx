@@ -12,6 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { SidebarWrapper } from '@/components/SidebarWrapper'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -74,7 +75,11 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <RenderHero {...hero} />
-      <RenderBlocks blocks={layout} />
+      
+      {/* Wrap page content in SidebarWrapper */}
+      <SidebarWrapper>
+        <RenderBlocks blocks={layout} />
+      </SidebarWrapper>
     </article>
   )
 }

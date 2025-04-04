@@ -4,6 +4,7 @@ import { Clock } from 'lucide-react'
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { Media } from '@/components/Media'
+import { SidebarWrapper } from '@/components/SidebarWrapper'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -123,8 +124,8 @@ export default async function Post({ params: paramsPromise }: Args) {
           <ResponsiveHero media={post.heroImage} />
         )}
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <article className="max-w-3xl mx-auto">
+        <SidebarWrapper>
+          <article>
             <div className="prose prose-lg max-w-none [&>p:first-child]:text-2xl [&>p:first-child]:font-light">
               <RichText data={post.content} enableGutter={false} />
             </div>
@@ -138,7 +139,7 @@ export default async function Post({ params: paramsPromise }: Args) {
               </footer>
             )}
           </article>
-        </div>
+        </SidebarWrapper>
       </main>
     </article>
   )

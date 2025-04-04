@@ -1,14 +1,31 @@
+'use client'
 import React from 'react'
-import { DynamicSidebar } from '@/components/Sidebar/DynamicSidebar'
-import { getPageLinks } from '@/utilities/getPageLinks'
+import { Sidebar } from '@/components/Sidebar'
 
 interface SidebarWithLinksProps {
   title?: string
+  initialLinks?: Array<{
+    label: string
+    url: string
+  }>
 }
 
-export async function SidebarWithLinks({ title = 'Pages' }: SidebarWithLinksProps) {
-  // Fetch page links using the server-side utility
-  const links = (await getPageLinks()).filter((link): link is { label: string; url: string } => link !== undefined)
+export const SidebarWithLinks: React.FC<SidebarWithLinksProps> = ({ 
+  title = "Navigation",
+  initialLinks = []
+}) => {
+  // Ensure we have at least some basic links
+  const links = initialLinks.length > 0 
+    ? initialLinks 
+    : [
+        { label: 'Home', url: '/' },
+        { label: 'Posts', url: '/posts' }
+      ]
   
-  return <DynamicSidebar title={title} initialLinks={links} />
+  return (
+    <Sidebar 
+      title={title}
+      links={links}
+    />
+  )
 }

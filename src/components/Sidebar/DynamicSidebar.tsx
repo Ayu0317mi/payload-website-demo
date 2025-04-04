@@ -23,6 +23,7 @@ export function DynamicSidebar({
       : [{ label: 'Home', url: '/' }]
   )
   
+  // Use the simple HomeSidebar which just displays the links
   return (
     <HomeSidebar 
       title={title}

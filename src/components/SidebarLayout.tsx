@@ -16,13 +16,14 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   navigationLinks = [
     { label: 'Home', url: '/' },
     { label: 'Posts', url: '/posts' },
+    { label: 'Contact', url: '/contact' },
   ] 
 }) => {
   return (
     <div className="container py-8">
-      <div className="flex flex-col lg:flex-row gap-8 relative">
+      <div className="flex flex-col lg:flex-row gap-8 relative transition-all duration-300">
         <div className="flex-1 min-w-0">{children}</div>
-        <div className="lg:w-auto">
+        <div className="lg:w-[300px] shrink-0 hidden lg:block">
           {sidebarContent || <DynamicSidebar title="Pages" initialLinks={navigationLinks} />}
         </div>
       </div>

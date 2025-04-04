@@ -2,6 +2,7 @@ import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
+import { SidebarWrapper } from '@/components/SidebarWrapper'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -106,30 +107,32 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
         </div>
       </div>
 
-      <div className="container mb-8">
-        <FilterSection categories={categories} />
-      </div>
-
-      {posts.totalDocs > 0 ? (
-        <>
-          <div className="container mb-8">
-            <PageRange
-              collection="posts"
-              currentPage={posts.page}
-              limit={12}
-              totalDocs={posts.totalDocs}
-            />
-          </div>
-
-          <CollectionArchive posts={posts.docs} />
-        </>
-      ) : (
-        <div className="container">
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            No posts found.
-          </p>
+      <SidebarWrapper>
+        <div className="mb-8">
+          <FilterSection categories={categories} />
         </div>
-      )}
+
+        {posts.totalDocs > 0 ? (
+          <>
+            <div className="mb-8">
+              <PageRange
+                collection="posts"
+                currentPage={posts.page}
+                limit={12}
+                totalDocs={posts.totalDocs}
+              />
+            </div>
+
+            <CollectionArchive posts={posts.docs} />
+          </>
+        ) : (
+          <div>
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              No posts found.
+            </p>
+          </div>
+        )}
+      </SidebarWrapper>
     </div>
   )
 }

@@ -12,6 +12,7 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { GlobalSidebar } from '@/components/Sidebar/GlobalSidebar'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
@@ -35,6 +36,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
 
           <Header />
+          {/* GlobalSidebar will be rendered but not visible until toggled */}
+          <GlobalSidebar />
           <main className="pt-[72px]">
             {children}
           </main>

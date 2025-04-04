@@ -13,9 +13,25 @@ export async function SidebarWrapper({ children }: SidebarWrapperProps) {
     (link): link is { label: string; url: string } => link !== undefined
   )
   
+  // Standard navigation links that should always be available
+  const standardLinks = [
+    { label: 'Home', url: '/' },
+    { label: 'Posts', url: '/posts' }
+  ]
+  
+  // Combine standard links with page links, avoiding duplicates
+  const allLinks = [...standardLinks]
+  
+  // Add dynamic page links, but avoid duplicating standard ones
+  navigationLinks.forEach(link => {
+    if (!allLinks.some(existingLink => existingLink.url === link.url)) {
+      allLinks.push(link)
+    }
+  })
+  
   // Pass the links as props to the client component
   return (
-    <SidebarLayout navigationLinks={navigationLinks}>
+    <SidebarLayout navigationLinks={allLinks}>
       {children}
     </SidebarLayout>
   )

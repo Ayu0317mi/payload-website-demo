@@ -35,8 +35,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-border/40 transition-[margin] duration-300",
-        isOpen ? "lg:ml-[320px]" : ""
+        "fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-border/40 transition-all duration-300",
+        isOpen ? "lg:ml-[320px]" : "" 
       )}
       {...(theme ? { 'data-theme': theme } : {})}
     >
