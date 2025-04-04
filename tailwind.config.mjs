@@ -29,20 +29,9 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: {
-        '2xl': '2rem',
-        DEFAULT: '1rem',
-        lg: '2rem',
-        md: '2rem',
-        sm: '1rem',
-        xl: '2rem',
-      },
+      padding: "2rem",
       screens: {
-        '2xl': '86rem',
-        lg: '64rem',
-        md: '48rem',
-        sm: '40rem',
-        xl: '80rem',
+        "2xl": "1400px",
       },
     },
     extend: {
@@ -106,6 +95,54 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'p:first-child': {
+              fontSize: '1.5rem',
+              lineHeight: '2rem',
+              fontWeight: '300',
+            },
+            maxWidth: 'none',
+            color: 'hsl(var(--foreground))',
+            hr: {
+              borderColor: 'hsl(var(--border))',
+              marginTop: '3em',
+              marginBottom: '3em'
+            },
+            'h1, h2, h3, h4': {
+              color: 'hsl(var(--foreground))',
+            },
+            blockquote: {
+              borderLeftColor: 'hsl(var(--border))',
+              color: 'hsl(var(--foreground))',
+            },
+            'ul > li::marker': {
+              color: 'hsl(var(--foreground))',
+            },
+            'ol > li::marker': {
+              color: 'hsl(var(--foreground))',
+            },
+            code: {
+              color: 'hsl(var(--foreground))',
+            },
+            'pre code': {
+              backgroundColor: 'transparent',
+              color: 'inherit',
+              fontSize: 'inherit',
+              fontWeight: 'inherit',
+              lineHeight: 'inherit',
+            },
+            pre: {
+              backgroundColor: 'hsl(var(--muted))',
+              color: 'hsl(var(--foreground))',
+            },
+            strong: {
+              color: 'hsl(var(--foreground))',
+            }
+          }
+        }
       },
       typography: () => ({
         DEFAULT: {

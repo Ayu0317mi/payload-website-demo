@@ -55,64 +55,63 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   return (
-    <article className="pt-16 pb-16">
+    <article className="pt-8 pb-16">
       <PageClient />
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
 
       <main>
         <div className="container mx-auto px-4 py-8">
-          <article className="max-w-3xl mx-auto">
-            <header className="mb-8">
+          <article className="max-w-4xl mx-auto">
+            <header className="mb-12 flex flex-col items-center text-center">
               {post.categories && post.categories.length > 0 && (
-                <div className="categories">
+                <div className="categories mb-4">
                   {post.categories.map((category, index) => {
                     if (typeof category === 'object' && category !== null) {
                       return (
-                        <React.Fragment key={category.id}>
+                        <span key={category.id} className="capitalize text-sm text-muted-foreground">
                           {category.title}
-                          {index < (post.categories?.length || 0) - 1 ? ', ' : ''}
-                        </React.Fragment>
+                          {index < (post.categories?.length || 0) - 1 ? ' • ' : ''}
+                        </span>
                       )
                     }
                     return null
                   })}
                 </div>
               )}
-              <h1 className="mb-6 text-3xl md:text-5xl lg:text-6xl">{post.title}</h1>
               
-              <div className="flex gap-8 text-sm text-muted-foreground">
-                <div className="flex flex-col gap-4">
+              <h1 className="mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">{post.title}</h1>
+              
+              {post.meta?.description && (
+                <p className="text-xl text-muted-foreground mb-8 max-w-2xl">
+                  {post.meta.description}
+                </p>
+              )}
+
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center justify-center gap-12 text-base">
                   {post.populatedAuthors && post.populatedAuthors.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
-                        {post.populatedAuthors[0]?.name?.[0]?.toUpperCase() || '?'}
-                      </div>
-                      <span className="text-sm font-medium text-foreground">
-                        {formatAuthors(post.populatedAuthors)}
-                      </span>
-                    </div>
+                    post.populatedAuthors.map((author, index) => (
+                      <figure key={index} className="flex items-center gap-2">
+                        <div className="rounded-full w-11 h-11 bg-muted flex items-center justify-center">
+                          {author?.name?.[0]?.toUpperCase() || '?'}
+                        </div>
+                        <span className="font-medium">{author.name}</span>
+                      </figure>
+                    ))
                   )}
                 </div>
-                <div className="flex items-center gap-2">
-                <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
-                    <CalendarDaysIcon className="h-4 w-4" />
-                  </div>
-                      {post.publishedAt && (
-                        
-                      <time dateTime={post.publishedAt} className="text-sm font-medium text-foreground">
-                        {formatDateTime(post.publishedAt)}
-                      </time>
-                      )}
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="rounded-full w-8 h-8 bg-muted flex items-center justify-center">
+                <div className="flex items-center divide-x divide-border text-sm text-muted-foreground">
+                  {post.publishedAt && (
+                    <time dateTime={post.publishedAt} className="pr-2">
+                      {formatDateTime(post.publishedAt)}
+                    </time>
+                  )}
+                  <div className="pl-2 flex items-center gap-1">
                     <Clock className="h-4 w-4" />
+                    <span>{calculateReadTime(post.content)}</span>
                   </div>
-                  <span className="text-sm font-medium text-foreground">
-                    {calculateReadTime(post.content)}
-                  </span>
                 </div>
               </div>
             </header>
@@ -120,7 +119,7 @@ export default async function Post({ params: paramsPromise }: Args) {
         </div>
 
         {post.heroImage && typeof post.heroImage === 'object' && (
-          <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh] xl:h-[80vh]">
+          <div className="relative w-full max-h-[720px] h-[60vh] mb-12">
             <Media
               resource={post.heroImage}
               priority
@@ -130,14 +129,14 @@ export default async function Post({ params: paramsPromise }: Args) {
           </div>
         )}
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4">
           <article className="max-w-3xl mx-auto">
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-lg max-w-none [&>p:first-child]:text-2xl [&>p:first-child]:font-light">
               <RichText data={post.content} enableGutter={false} />
             </div>
 
             {post.relatedPosts && post.relatedPosts.length > 0 && (
-              <footer className="mt-8 pt-6 border-t">
+              <footer className="mt-16 pt-8 border-t">
                 <RelatedPosts
                   className="mt-12"
                   docs={post.relatedPosts.filter((post) => typeof post === 'object')}
