@@ -52,9 +52,11 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   // NOTE: this is used by the browser to determine which image to download at different screen sizes
   const sizes = sizeFromProps
     ? sizeFromProps
+    : fill
+    ? '100vw' // For fill mode, use 100vw as a size hint
     : Object.entries(breakpoints)
-        .map(([, value]) => `(max-width: ${value}px) ${value * 2}w`)
-        .join(', ')
+        .map(([, value]) => `(max-width: ${value}px) ${value}px`)
+        .join(', ') + ', 1200px' // Default to 1200px for larger screens
 
   return (
     <picture className={cn(pictureClassName)}>

@@ -18,6 +18,7 @@ import { formatAuthors } from '@/utilities/formatAuthors'
 import { generateMeta } from '@/utilities/generateMeta'
 import { calculateReadTime } from '@/utilities/calculateReadTime'
 import PageClient from './page.client'
+import ResponsiveHero from './ResponsiveHero.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
@@ -61,7 +62,7 @@ export default async function Post({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <main>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <article className="max-w-4xl mx-auto">
             <header className="mb-12 flex flex-col items-center text-center">
               {post.categories && post.categories.length > 0 && (
@@ -119,17 +120,10 @@ export default async function Post({ params: paramsPromise }: Args) {
         </div>
 
         {post.heroImage && typeof post.heroImage === 'object' && (
-          <div className="relative w-full max-h-[720px] h-[60vh] mb-12">
-            <Media
-              resource={post.heroImage}
-              priority
-              fill
-              imgClassName="object-cover"
-            />
-          </div>
+          <ResponsiveHero media={post.heroImage} />
         )}
 
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <article className="max-w-3xl mx-auto">
             <div className="prose prose-lg max-w-none [&>p:first-child]:text-2xl [&>p:first-child]:font-light">
               <RichText data={post.content} enableGutter={false} />
