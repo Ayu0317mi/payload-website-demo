@@ -61,7 +61,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <main>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <article className="max-w-4xl mx-auto">
+          <article className="max-w-3xl mx-auto">
             <header className="mb-12 flex flex-col items-center text-center">
               {post.categories && post.categories.length > 0 && (
                 <div className="categories mb-4">
@@ -122,7 +122,7 @@ export default async function Post({ params: paramsPromise }: Args) {
         )}
 
         <SidebarWrapper>
-          <article>
+          <article className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="prose prose-lg max-w-none [&>p:first-child]:text-2xl [&>p:first-child]:font-light">
               <RichText data={post.content} enableGutter={false} />
             </div>
