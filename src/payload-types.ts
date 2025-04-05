@@ -789,6 +789,73 @@ export interface SolutionBlock {
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        icon?:
+          | (
+              | 'activity'
+              | 'alert'
+              | 'anchor'
+              | 'archive'
+              | 'arrowUpRight'
+              | 'award'
+              | 'baseline'
+              | 'battery'
+              | 'binary'
+              | 'blocks'
+              | 'bookmark'
+              | 'box'
+              | 'briefcase'
+              | 'building'
+              | 'chef'
+              | 'currency'
+              | 'code'
+              | 'compass'
+              | 'cloud'
+              | 'code2'
+              | 'database'
+              | 'file'
+              | 'crown'
+              | 'flag'
+              | 'globe'
+              | 'hammer'
+              | 'heart'
+              | 'help'
+              | 'home'
+              | 'image'
+              | 'library'
+              | 'lifebuoy'
+              | 'lightbulb'
+              | 'link'
+              | 'lock'
+              | 'mail'
+              | 'map'
+              | 'message'
+              | 'microscope'
+              | 'moon'
+              | 'music'
+              | 'paint'
+              | 'palette'
+              | 'pencil'
+              | 'phone'
+              | 'chart'
+              | 'puzzle'
+              | 'rocket'
+              | 'search'
+              | 'settings'
+              | 'shield'
+              | 'shop'
+              | 'star'
+              | 'sun'
+              | 'table'
+              | 'target'
+              | 'terminal'
+              | 'timer'
+              | 'trophy'
+              | 'tv'
+              | 'users'
+              | 'wallet'
+              | 'wrench'
+            )
+          | null;
         richText?: {
           root: {
             type: string;
@@ -1252,6 +1319,7 @@ export interface SolutionBlockSelect<T extends boolean = true> {
     | T
     | {
         size?: T;
+        icon?: T;
         richText?: T;
         enableLink?: T;
         link?:

@@ -2,15 +2,13 @@ import { cn } from '@/utilities/ui'
 import React from 'react'
 import RichText from '@/components/RichText'
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
-
-// Instead of importing a non-existent type, we'll define it here temporarily
-// using ContentBlock as a reference
 import type { ContentBlock, Page, Post } from '@/payload-types'
-
 import { CMSLink } from '../../components/Link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import { iconMap } from '@/components/ui/icons'
+import type { LucideIcon } from 'lucide-react'
 
 // Create a temporary type for SolutionBlock based on ContentBlock
 type SolutionBlockProps = Omit<ContentBlock, 'blockType'> & {
@@ -22,6 +20,7 @@ type SolutionBlockProps = Omit<ContentBlock, 'blockType'> & {
 // Define a type for the column item
 type ColumnItem = {
   size?: 'oneThird' | 'half' | 'twoThirds' | 'full' | null;
+  icon?: keyof typeof iconMap | null;
   richText?: DefaultTypedEditorState;
   enableLink?: boolean | null;
   link?: {
@@ -61,11 +60,13 @@ export const SolutionBlock: React.FC<SolutionBlockProps> = (props) => {
           Array.isArray(columns) &&
           columns.length > 0 &&
           columns.map((col: ColumnItem, index: number) => {
-            const { enableLink, link, richText, size } = col
+            const { enableLink, link, richText, size, icon } = col
 
             // Handle the case where size might be null or undefined
             const sizeKey = size || 'oneThird';
             const colSpanClass = colsSpanClasses[sizeKey] || '4'; // Default to 4 if not found
+
+            const IconComponent = icon ? iconMap[icon] : null;
 
             return (
               <div
@@ -76,6 +77,11 @@ export const SolutionBlock: React.FC<SolutionBlockProps> = (props) => {
               >
                 <Card className="h-full overflow-hidden bg-white dark:bg-card rounded-xl shadow-sm border-neutral-100 dark:border-border hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
+                    {IconComponent && (
+                      <div className="mb-4">
+                        <IconComponent className="h-8 w-8 text-primary" />
+                      </div>
+                    )}
                     {richText && <RichText data={richText} enableGutter={false} />}
 
                     {enableLink && link && (
