@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import { Sidebar } from '@/components/Sidebar'
 
 export const GlobalSidebar: React.FC = () => {

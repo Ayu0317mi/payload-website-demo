@@ -1,8 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
-import { cn } from '@/utilities/ui'
 import { Sidebar } from '@/components/Sidebar'
 import { usePathname } from 'next/navigation'
 

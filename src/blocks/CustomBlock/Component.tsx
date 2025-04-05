@@ -61,8 +61,8 @@ export const CustomBlockComponent: React.FC<
         <div className="container mb-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
-            <Link href="/posts" className="shrink-0">
-              <Button variant="default" size="lg" className="group">
+            <Link href="/posts" className="w-full md:w-auto">
+              <Button variant="default" size="lg" className="w-full md:w-auto group">
                 View all articles
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>

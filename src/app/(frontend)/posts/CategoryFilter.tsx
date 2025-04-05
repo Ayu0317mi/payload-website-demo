@@ -9,8 +9,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import type { Category as PayloadCategory } from '@/payload-types'
-
 export type Category = {
   id: string
   title: string
