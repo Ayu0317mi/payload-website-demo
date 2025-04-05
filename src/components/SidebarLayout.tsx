@@ -21,7 +21,7 @@ export const SidebarLayout: React.FC<SidebarLayoutProps> = ({
 }) => {
   return (
     <div className="container py-8">
-      <div className="flex flex-col lg:flex-row gap-8 relative">
+      <div className="flex flex-col lg:flex-row relative">
         <div className="flex-1 min-w-0">{children}</div>
         <div className="hidden lg:block">
           {sidebarContent || <DynamicSidebar title="Pages" initialLinks={navigationLinks} />}
