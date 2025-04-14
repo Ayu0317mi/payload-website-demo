@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
-import { Clock } from 'lucide-react'
+import { ArrowLeft, Clock } from 'lucide-react'
+import Link from 'next/link'
 
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
-import { SidebarWrapper } from '@/components/SidebarWrapper'
+import { ShareButtons } from '@/components/ShareButtons'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
-import {ShareButtons} from '@/components/ShareButtons'
 
 import type { Post } from '@/payload-types'
 
@@ -54,6 +54,8 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  const fullUrl = `${process.env.NEXT_PUBLIC_SERVER_URL || ''}${url}`
+
   return (
     <article className="pt-8 pb-16">
       <PageClient />
@@ -64,21 +66,29 @@ export default async function Post({ params: paramsPromise }: Args) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <article className="max-w-3xl mx-auto">
             <header className="mb-12 flex flex-col items-center text-center">
-              {post.categories && post.categories.length > 0 && (
-                <div className="categories mb-4">
-                  {post.categories.map((category, index) => {
-                    if (typeof category === 'object' && category !== null) {
-                      return (
-                        <span key={category.id} className="capitalize text-sm text-muted-foreground">
-                          {category.title}
-                          {index < (post.categories?.length || 0) - 1 ? ' • ' : ''}
-                        </span>
-                      )
-                    }
-                    return null
-                  })}
-                </div>
-              )}
+              <div className="w-full mb-4 flex items-center justify-center">
+                <Link href="/posts" className="flex items-center text-primary hover:text-primary/80 mr-1 text-sm">
+                  <ArrowLeft className="h-3 w-3 mr-1" />
+                  <span>Blog</span>
+                </Link>
+                
+                {post.categories && post.categories.length > 0 && (
+                  <>
+                    <span className="text-muted-foreground mx-1">/</span>
+                    {post.categories.map((category, index) => {
+                      if (typeof category === 'object' && category !== null) {
+                        return (
+                          <span key={category.id} className="capitalize text-sm text-muted-foreground">
+                            {category.title}
+                            {index < (post.categories?.length || 0) - 1 ? ' • ' : ''}
+                          </span>
+                        )
+                      }
+                      return null
+                    })}
+                  </>
+                )}
+              </div>
               
               <h1 className="mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">{post.title}</h1>
               
@@ -88,8 +98,13 @@ export default async function Post({ params: paramsPromise }: Args) {
                 </p>
               )}
 
+              <div className="mt-6 mb-6">
+                  <ShareButtons url={fullUrl} title={post.title} />
+              </div>
+
               <div className="flex flex-col items-center gap-3">
                 <div className="flex items-center justify-center gap-12 text-base">
+
                   {post.populatedAuthors && post.populatedAuthors.length > 0 && (
                     post.populatedAuthors.map((author, index) => (
                       <figure key={index} className="flex items-center gap-2">
@@ -113,26 +128,16 @@ export default async function Post({ params: paramsPromise }: Args) {
                     <span>{calculateReadTime(post.content)}</span>
                   </div>
                 </div>
+
               </div>
             </header>
           </article>
-        </div>
-        <div>
-          <ShareButtons
-            variant="default"
-            size="sm"
-            className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50"
-            url={post.slug || ''}
-            title={post.title}
-            description={post.meta?.description || ''}
-          />
         </div>
 
         {post.heroImage && typeof post.heroImage === 'object' && (
           <ResponsiveHero media={post.heroImage} />
         )}
 
-        <SidebarWrapper>
           <article className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="prose prose-lg max-w-none [&>p:first-child]:text-2xl [&>p:first-child]:font-light">
               <RichText data={post.content} enableGutter={false} />
@@ -140,6 +145,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
             {post.relatedPosts && post.relatedPosts.length > 0 && (
               <footer className="mt-16 pt-8 border-t">
+                <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
                 <RelatedPosts
                   className="mt-12"
                   docs={post.relatedPosts.filter((post) => typeof post === 'object')}
@@ -147,7 +153,6 @@ export default async function Post({ params: paramsPromise }: Args) {
               </footer>
             )}
           </article>
-        </SidebarWrapper>
       </main>
     </article>
   )

@@ -31,28 +31,15 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
 }) => {
   // Determine the full URL for sharing
   const [shareUrl] = useState(() => {
-    // Check if we're in the browser environment
-    if (typeof window === 'undefined') {
-      return url; // Return the URL as is during SSR
-    }
-    
-    // Check if the URL is already absolute (starts with http:// or https://)
-    if (url.match(/^https?:\/\//)) {
-      return url; // Return as is if it's already a full URL
-    }
-    
-    // Get the base URL
-    const baseUrl = window.location.origin;
-    
-    // Combine with the path, ensuring we don't have double slashes
-    return `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
+    // Use the provided URL directly - it should be the full path to the current page
+    return typeof window !== 'undefined' ? window.location.href : url;
   });
   
   const [linkCopied, setLinkCopied] = useState(false);
 
   // Prepare the sharing URLs
   const shareLinks = {
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(title)}&body=${encodeURIComponent(description + "\n\n" + shareUrl)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}`,
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
     email: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(description + "\n\n" + shareUrl)}`,
@@ -88,7 +75,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => handleShare("linkedin")}>
             <Linkedin className="mr-2 h-4 w-4" />
-            LinkedIn
+            LinkedIn Test
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleShare("twitter")}>
             <Xicon className="mr-2 h-4 w-4" />
