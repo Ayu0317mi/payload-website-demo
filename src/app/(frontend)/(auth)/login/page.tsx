@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignIn } from "@/components/auth-component"; // Adjust the path as necessary
+import { Button } from "@/components/ui/button";
+// Removed SignIn import from deleted auth-component
 
 export default function LoginPage() {
   return (
@@ -11,7 +12,40 @@ export default function LoginPage() {
             <CardDescription className="text-center">Sign in to your account</CardDescription>
           </CardHeader>
           <CardContent>
-            <SignIn />
+            {/* Replaced SignIn component with standard login form */}
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                />
+              </div>
+              <div>
+                <Button type="submit" className="w-full">
+                  Sign in
+                </Button>
+              </div>
+            </form>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
             <div className="text-sm text-center text-gray-600">

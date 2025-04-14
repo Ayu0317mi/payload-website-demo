@@ -9,6 +9,7 @@ import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
+import {ShareButtons} from '@/components/ShareButtons'
 
 import type { Post } from '@/payload-types'
 
@@ -115,6 +116,16 @@ export default async function Post({ params: paramsPromise }: Args) {
               </div>
             </header>
           </article>
+        </div>
+        <div>
+          <ShareButtons
+            variant="ghost"
+            size="sm"
+            className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50"
+            url={post.slug || ''}
+            title={post.title}
+            description={post.meta?.description || ''}
+          />
         </div>
 
         {post.heroImage && typeof post.heroImage === 'object' && (
